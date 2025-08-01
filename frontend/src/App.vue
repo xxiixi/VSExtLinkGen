@@ -1,16 +1,17 @@
 <template>
-  <div class="bg-gray-50 min-h-screen font-sans">
+  <div
+    class="min-h-screen font-sans bg-gradient-to-br from-blue-100 via-indigo-100 via-purple-100 via-pink-100 to-yellow-100"
+  >
     <div class="container mx-auto px-4 py-8 max-w-4xl">
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-indigo-600 mb-2">
+        <h1 class="text-3xl font-bold title-gradient mb-2">
           VS Extension Link Generator
         </h1>
-        <p class="text-gray-600 text-base">输入插件链接，自动生成下载链接</p>
       </div>
 
       <!-- 输入区域 -->
       <div
-        class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover transition-all"
+        class="bg-gradient-to-r from-white to-gray-50 rounded-xl shadow-md p-6 mb-8 card-hover transition-all"
       >
         <!-- URL输入 -->
         <div class="mb-6">
@@ -23,7 +24,7 @@
             type="text"
             id="pluginUrl"
             v-model="pluginUrl"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:ring-2 theme-focus-ring transition-shadow"
             placeholder="请输入VS Code插件市场链接"
           />
           <p class="text-gray-500 text-xs mt-1.5">
@@ -34,7 +35,7 @@
         <button
           @click="generateLinks"
           :disabled="isLoading"
-          class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white px-6 py-2.5 rounded-lg transition-all font-medium shadow-sm hover:shadow"
+          class="w-full generate-btn px-6 py-2.5 rounded-lg font-medium"
         >
           <i
             :class="isLoading ? 'fas fa-spinner fa-spin' : 'fas fa-link'"
@@ -48,12 +49,12 @@
       <div class="fade-in result-container">
         <!-- 平台无关链接 -->
         <div
-          class="bg-white rounded-xl shadow-md p-6 mb-6 card-hover transition-all"
+          class="bg-gradient-to-r from-white to-gray-50 rounded-xl shadow-md p-6 mb-6 card-hover transition-all"
         >
           <h2
             class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
           >
-            <i class="fas fa-globe text-indigo-500 mr-2"></i>通用链接
+            <i class="fas fa-desktop theme-primary mr-2"></i>通用链接
           </h2>
           <div class="flex">
             <input
@@ -65,29 +66,29 @@
             />
             <button
               @click="copyToClipboard(platformIndependentLink)"
-              class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2.5 transition-colors"
+              class="px-3 py-2.5 transition-colors text-gray-500 hover:text-gray-700 hover:bg-gray-100 border-r border-t border-b border-gray-300"
               :disabled="!platformIndependentLink"
             >
-              <i class="fas fa-copy mr-1.5"></i>复制
+              <i class="fas fa-copy"></i>
             </button>
             <button
               @click="downloadLink(platformIndependentLink)"
-              class="bg-green-600 hover:bg-green-700 text-white px-3 py-2.5 rounded-r-lg transition-colors"
+              class="px-3 py-2.5 transition-colors text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-r-lg border-r border-t border-b border-gray-300"
               :disabled="!platformIndependentLink"
             >
-              <i class="fas fa-download mr-1.5"></i>下载
+              <i class="fas fa-download"></i>
             </button>
           </div>
         </div>
 
         <!-- 平台相关链接 -->
         <div
-          class="bg-white rounded-xl shadow-md p-6 card-hover transition-all"
+          class="bg-gradient-to-r from-white to-gray-50 rounded-xl shadow-md p-6 card-hover transition-all"
         >
           <h2
             class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
           >
-            <i class="fas fa-desktop text-indigo-500 mr-2"></i>平台dependent链接
+            <i class="fas fa-desktop theme-primary mr-2"></i>平台dependent链接
           </h2>
           <div v-for="platform in platforms" :key="platform" class="mb-4">
             <!-- 平台小标题 -->
@@ -106,17 +107,17 @@
                 @click="
                   copyToClipboard(generatePlatformDependentLink(platform))
                 "
-                class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2.5 transition-colors"
+                class="px-3 py-2.5 transition-colors text-gray-500 hover:text-gray-700 hover:bg-gray-100 border-r border-t border-b border-gray-300"
                 :disabled="!platformIndependentLink"
               >
-                <i class="fas fa-copy mr-1.5"></i>复制
+                <i class="fas fa-copy"></i>
               </button>
               <button
                 @click="downloadLink(generatePlatformDependentLink(platform))"
-                class="bg-green-600 hover:bg-green-700 text-white px-3 py-2.5 rounded-r-lg transition-colors"
+                class="px-3 py-2.5 transition-colors text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-r-lg border-r border-t border-b border-gray-300"
                 :disabled="!platformIndependentLink"
               >
-                <i class="fas fa-download mr-1.5"></i>下载
+                <i class="fas fa-download"></i>
               </button>
             </div>
           </div>
@@ -131,9 +132,7 @@
         <div
           :class="[
             'toast px-4 py-2.5 rounded-lg shadow-lg mb-2 flex items-center',
-            toastType === 'error'
-              ? 'bg-red-500 text-white'
-              : 'bg-green-500 text-white',
+            toastType === 'error' ? 'toast-error' : 'toast-success',
           ]"
         >
           <i
@@ -149,9 +148,9 @@
       </div>
     </div>
 
-    <footer class="bg-gray-100 py-4 mt-10">
+    <footer class="bg-gradient-to-r from-gray-100 to-gray-200 py-4 mt-10">
       <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
-        <p>VS Extension Link Generator © 2023</p>
+        <p>VS Extension Link Generator © 2025</p>
       </div>
     </footer>
   </div>

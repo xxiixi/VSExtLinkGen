@@ -1,3 +1,27 @@
+:root {
+  --primary-color: #6366f1; /* 紫蓝色作为主色 */
+  --primary-hover: #4f46e5; /* 加深紫蓝作为hover */
+  --primary-text: #ffffff;
+
+  /* secondary颜色系统 */
+  --secondary-color: #6366f1; /* 深紫色作为secondary */
+  --secondary-hover: #4f46e5; /* 加深紫色作为hover */
+  --secondary-text: #ffffff;
+
+  /* 状态色 */
+  --success-color: #16bb95; /* 青绿色形成对比 */
+  --success-hover: #73d2b7;
+  --error-color: #f56565; /* 补充红色 */
+  --error-hover: #e05555;
+
+  /* 中性色 */
+  --focus-ring: #85d1f5;
+  --neutral-100: #f5f5ff; /* 极浅紫背景 */
+  --neutral-200: #e6e6fa; /* 浅紫分割线 */
+  --neutral-700: #334155; /* 深灰文字 */
+  --neutral-900: #1e293b; /* 最深文字 */
+}
+
 /* 基础样式优化 */
 * {
   box-sizing: border-box;
@@ -8,6 +32,8 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: var(--neutral-100);
+  color: var(--neutral-900);
 }
 
 /* 卡片容器样式 - 确保所有卡片宽度一致 */
@@ -22,7 +48,10 @@ body {
 .card-hover {
   transition: all 0.3s ease;
   width: 100%; /* 强制卡片占满容器宽度 */
-  margin-bottom: 1.5rem; /* 统一卡片间距为1.5rem */
+  margin-bottom: 1.3rem; /* 统一卡片间距为1.5rem */
+  background-color: white;
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 /* 输入区域卡片特殊调整 */
@@ -41,8 +70,9 @@ body {
 
 /* 卡片悬停效果 */
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  border-color: rgba(42, 127, 140, 0.2);
 }
 
 /* 渐入动画 */
@@ -80,6 +110,17 @@ body {
   min-width: 200px; /* 设置最小宽度 */
 }
 
+/* 提示框状态样式 */
+.toast-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.toast-error {
+  background-color: var(--error-color);
+  color: white;
+}
+
 @keyframes slideUp {
   to {
     transform: translateY(0);
@@ -100,22 +141,65 @@ body {
   padding: 0; /* 移除多余内边距 */
 }
 
-/* 平台标题样式 */
-.platform-title {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+/* 生成下载链接按钮专用样式 */
+.generate-btn {
+  background: linear-gradient(135deg, #a5b4fc 0%, #818cf8 50%, #a5b4fc 100%);
+
+  color: white;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
 }
 
-/* 按钮样式优化 */
-button {
-  cursor: pointer;
+.generate-btn:hover {
+  background: linear-gradient(135deg, #818cf8 0%, #6366f1 50%, #818cf8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+
+.generate-btn:active {
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+.generate-btn:disabled {
+  background: linear-gradient(135deg, #d1d5db 0%, #9ca3af 50%, #6b7280 100%);
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: not-allowed;
 }
 
 /* 输入框样式优化 */
 input[type="text"] {
   font-family: inherit;
+  border-color: var(--neutral-200);
+}
+
+input[type="text"]:focus {
+  border-color: var(--primary-color);
+  transition: all 0.2s ease;
+}
+
+/* 标题样式优化 */
+h1,
+h2,
+h3 {
+  color: var(--neutral-900);
+}
+
+/* 标题容器间距调整 */
+.text-center.mb-8 {
+  margin-top: 2rem !important;
+  margin-bottom: 4rem !important;
+}
+
+/* 标题渐变样式 */
+.title-gradient {
+  background: linear-gradient(90deg, #959eeb 0%, #6366f1 50%, #6f7ada 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-weight: bold;
 }
 
 /* 响应式调整 */
@@ -141,4 +225,15 @@ input[type="text"] {
   .card-hover {
     margin-bottom: 1rem;
   }
+}
+
+/* 主题样式类 - 使用CSS变量 */
+.theme-primary {
+  color: var(--primary-color);
+}
+
+.theme-focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--focus-ring);
+  border-color: var(--focus-ring);
 }
