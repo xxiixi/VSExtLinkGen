@@ -10,11 +10,36 @@ body {
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-/* 卡片悬停效果 */
-.card-hover {
-  transition: all 0.3s ease;
+/* 卡片容器样式 - 确保所有卡片宽度一致 */
+.container > div:not(footer) {
+  width: 100%;
+  max-width: 4xl; /* 与容器最大宽度保持一致 */
+  margin-left: auto;
+  margin-right: auto;
 }
 
+/* 卡片通用样式 - 统一间距和宽度 */
+.card-hover {
+  transition: all 0.3s ease;
+  width: 100%; /* 强制卡片占满容器宽度 */
+  margin-bottom: 1.5rem; /* 统一卡片间距为1.5rem */
+}
+
+/* 输入区域卡片特殊调整 */
+.card-hover:first-of-type {
+  margin-bottom: 1.5rem; /* 与下方结果区域保持相同间距 */
+}
+
+/* 结果区域卡片间距调整 */
+.result-container > div {
+  margin-bottom: 1.5rem; /* 结果区域内卡片间距统一 */
+}
+
+.result-container > div:last-child {
+  margin-bottom: 0; /* 最后一个卡片取消底部间距 */
+}
+
+/* 卡片悬停效果 */
 .card-hover:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.08);
@@ -43,6 +68,16 @@ body {
   transform: translateY(100px);
   opacity: 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 400px; /* 限制最大宽度 */
+  width: auto; /* 允许内容自适应宽度 */
+  min-width: 200px; /* 设置最小宽度 */
+}
+
+/* 提示框容器样式 */
+.toast-container {
+  max-width: 400px; /* 限制容器最大宽度 */
+  width: auto; /* 允许内容自适应宽度 */
+  min-width: 200px; /* 设置最小宽度 */
 }
 
 @keyframes slideUp {
@@ -62,7 +97,7 @@ body {
 /* 结果区域样式 */
 .result-container {
   margin-top: 1.5rem;
-  padding: 0.5rem;
+  padding: 0; /* 移除多余内边距 */
 }
 
 /* 平台标题样式 */
@@ -100,5 +135,10 @@ input[type="text"] {
 
   .result-container {
     margin-top: 1rem;
+  }
+
+  /* 移动端卡片间距稍减 */
+  .card-hover {
+    margin-bottom: 1rem;
   }
 }

@@ -53,16 +53,15 @@
           <h2
             class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
           >
-            <i class="fas fa-globe text-indigo-500 mr-2"></i>下载链接 1
-            (平台无关)
+            <i class="fas fa-globe text-indigo-500 mr-2"></i>通用链接
           </h2>
           <div class="flex">
             <input
               type="text"
-              :value="platformIndependentLink || '未生成'"
+              :value="platformIndependentLink || null"
               class="flex-1 rounded-l-lg border border-gray-300 px-4 py-2.5 bg-gray-50 text-gray-700 text-sm"
               readonly
-              placeholder="未生成"
+              placeholder="链接未生成"
             />
             <button
               @click="copyToClipboard(platformIndependentLink)"
@@ -88,8 +87,7 @@
           <h2
             class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
           >
-            <i class="fas fa-desktop text-indigo-500 mr-2"></i>下载链接 2
-            (平台相关)
+            <i class="fas fa-desktop text-indigo-500 mr-2"></i>平台dependent链接
           </h2>
           <div v-for="platform in platforms" :key="platform" class="mb-4">
             <!-- 平台小标题 -->
@@ -128,7 +126,7 @@
       <!-- 提示消息容器 -->
       <div
         v-if="toastMessage"
-        class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50"
+        class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 toast-container"
       >
         <div
           :class="[
