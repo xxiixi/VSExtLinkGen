@@ -3,25 +3,16 @@
     <div class="container mx-auto px-4 py-8 max-w-4xl">
       <div class="text-center mb-8">
         <h1 class="text-3xl font-bold text-indigo-600 mb-2">
-            VS Extension Link Generator
+          VS Extension Link Generator
         </h1>
-        <p class="text-gray-600">Input the plugin link, and the system will automatically generate the download link</p>
+        <p class="text-gray-600">
+          Input the plugin link, and the system will automatically generate the
+          download link
+        </p>
       </div>
 
       <!-- 输入区域 -->
       <div class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover">
-        <!-- 引导提示 -->
-        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
-          <div class="flex">
-            <div class="flex-shrink-0">
-              <i class="fas fa-info-circle text-blue-500"></i>
-            </div>
-            <div class="ml-3">
-              <p class="text-sm text-blue-700">请输入VS Code插件市场的完整链接，例如：<code class="bg-white px-1 py-0.5 rounded">https://marketplace.visualstudio.com/items?itemName=Vue.volar</code></p>
-            </div>
-          </div>
-        </div>
-
         <!-- URL输入 -->
         <div class="mb-6">
           <label
@@ -34,10 +25,10 @@
             id="pluginUrl"
             v-model="pluginUrl"
             class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            placeholder="https://marketplace.visualstudio.com/items?itemName=Vue.volar"
           />
           <p class="text-gray-500 text-xs mt-1">
-            Input the plugin link, and the system will automatically extract the publisher, plugin name and version information
+            Input the plugin link, and the system will automatically extract the
+            publisher, plugin name and version information
           </p>
         </div>
 
@@ -46,8 +37,15 @@
           :disabled="isLoading"
           class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg transition-colors font-medium"
         >
-          <i :class="isLoading ? 'fas fa-spinner fa-spin' : 'fas fa-link'" class="mr-2"></i>
-          {{ isLoading ? 'Getting plugin information...' : 'Generate download link' }}
+          <i
+            :class="isLoading ? 'fas fa-spinner fa-spin' : 'fas fa-link'"
+            class="mr-2"
+          ></i>
+          {{
+            isLoading
+              ? "Getting plugin information..."
+              : "Generate download link"
+          }}
         </button>
       </div>
 
@@ -58,15 +56,16 @@
           <h2
             class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
           >
-            <i class="fas fa-globe text-indigo-500 mr-2"></i>Download Link 1 (Platform Independent)
+            <i class="fas fa-globe text-indigo-500 mr-2"></i>Download Link 1
+            (Platform Independent)
           </h2>
           <div class="flex">
             <input
               type="text"
-              :value="platformIndependentLink"
+              :value="platformIndependentLink || '未生成'"
               class="flex-1 rounded-l-lg border border-gray-300 px-4 py-3 bg-gray-50 text-gray-700"
               readonly
-              placeholder="请输入插件链接并点击生成按钮获取下载链接"
+              placeholder="未生成"
             />
             <button
               @click="copyToClipboard(platformIndependentLink)"
@@ -83,15 +82,20 @@
           <h2
             class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
           >
-            <i class="fas fa-desktop text-indigo-500 mr-2"></i>Download Link 2 (Platform Dependent)
+            <i class="fas fa-desktop text-indigo-500 mr-2"></i>Download Link 2
+            (Platform Dependent)
           </h2>
-          <div v-for="platform in platforms" :key="platform" class="flex mb-4 last:mb-0">
+          <div
+            v-for="platform in platforms"
+            :key="platform"
+            class="flex mb-4 last:mb-0"
+          >
             <input
               type="text"
               :value="generatePlatformDependentLink(platform)"
               class="flex-1 rounded-l-lg border border-gray-300 px-4 py-3 bg-gray-50 text-gray-700"
               readonly
-              :placeholder="`${platform}平台下载链接将在此显示`"
+              :placeholder="`${platform}平台下载链接`"
             />
             <button
               @click="copyToClipboard(generatePlatformDependentLink(platform))"
@@ -112,10 +116,19 @@
         <div
           :class="[
             'toast px-4 py-2 rounded-lg shadow-lg mb-2 flex items-center',
-            toastType === 'error' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+            toastType === 'error'
+              ? 'bg-red-500 text-white'
+              : 'bg-green-500 text-white',
           ]"
         >
-          <i :class="toastType === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-check-circle'" class="mr-2"></i>
+          <i
+            :class="
+              toastType === 'error'
+                ? 'fas fa-exclamation-circle'
+                : 'fas fa-check-circle'
+            "
+            class="mr-2"
+          ></i>
           {{ toastMessage }}
         </div>
       </div>
@@ -131,96 +144,106 @@
 
 <script>
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
-      pluginUrl: '',
+      pluginUrl: "",
       isLoading: false,
-      platformIndependentLink: '',
+      extractedData: null,
+      platformIndependentLink: "",
       // 预设常见平台列表
-      platforms: ['win32-x64', 'linux-x64', 'darwin-x64', 'darwin-arm64'],
-      toastMessage: '',
-      toastType: 'success'
-    }
+      platforms: ["win32-x64", "linux-x64", "darwin-x64", "darwin-arm64"],
+      toastMessage: "",
+      toastType: "success",
+    };
   },
   methods: {
     async generateLinks() {
       if (!this.pluginUrl.trim()) {
-        this.showToast('Please input the plugin link', 'error')
-        return
+        this.showToast("Please input the plugin link", "error");
+        return;
       }
 
-      this.isLoading = true
+      this.isLoading = true;
 
       try {
         // 调用后端API
-        const response = await fetch('/extract-data', {
-          method: 'POST',
+        const response = await fetch("/extract-data", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ url: this.pluginUrl }),
-        })
+        });
 
         if (!response.ok) {
-          const errorData = await response.json()
-          throw new Error(errorData.detail || 'Failed to get plugin information')
+          const errorData = await response.json();
+          throw new Error(
+            errorData.detail || "Failed to get plugin information"
+          );
         }
 
-        const data = await response.json()
+        const data = await response.json();
 
-        if (!data.publisher || !data.unique_identifier || !data.version) {
-          throw new Error('Failed to extract complete plugin information from the link')
+        if (!data.publisher || !data.plugin_name || !data.version) {
+          throw new Error(
+            "Failed to extract complete plugin information from the link"
+          );
         }
+
+        this.extractedData = data;
 
         // 生成平台无关链接
         this.platformIndependentLink = `https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${encodeURIComponent(
           data.publisher
         )}/vsextensions/${encodeURIComponent(
-          data.unique_identifier
-        )}/${encodeURIComponent(data.version)}/vspackage`
+          data.plugin_name
+        )}/${encodeURIComponent(data.version)}/vspackage`;
 
-        this.showToast('插件信息获取成功，已生成下载链接')
+        this.showToast("插件信息获取成功，已生成下载链接");
       } catch (error) {
-        console.error('Error:', error)
-        this.showToast(error.message || '获取插件信息时发生错误', 'error')
+        console.error("Error:", error);
+        this.showToast(error.message || "获取插件信息时发生错误", "error");
       } finally {
-        this.isLoading = false
+        this.isLoading = false;
       }
     },
 
     generatePlatformDependentLink(platform) {
-      if (!this.platformIndependentLink) return ''
-      
+      if (!this.platformIndependentLink) return "";
+
       // 从平台无关链接中提取基础信息
-      const baseUrl = this.platformIndependentLink.split('/vspackage')[0]
-      return `${baseUrl}?targetPlatform=${encodeURIComponent(platform)}`
+      const baseUrl = this.platformIndependentLink.split("/vspackage")[0];
+      return `${baseUrl}?targetPlatform=${encodeURIComponent(platform)}`;
     },
 
     copyToClipboard(text) {
-      if (!text) return
-      
-      navigator.clipboard.writeText(text).then(() => {
-        this.showToast('链接已成功复制到剪贴板')
-      }).catch(() => {
-        // 降级方案
-        const textArea = document.createElement('textarea')
-        textArea.value = text
-        document.body.appendChild(textArea)
-        textArea.select()
-        document.execCommand('copy')
-        document.body.removeChild(textArea)
-        this.showToast('链接已成功复制到剪贴板')
-      })
+      if (!text) return;
+
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          this.showToast("链接已成功复制到剪贴板");
+        })
+        .catch(() => {
+          // 降级方案
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+          this.showToast("链接已成功复制到剪贴板");
+        });
     },
 
-    showToast(message, type = 'success') {
-      this.toastMessage = message
-      this.toastType = type
+    showToast(message, type = "success") {
+      this.toastMessage = message;
+      this.toastType = type;
       setTimeout(() => {
-        this.toastMessage = ''
-      }, 3000)
-    }
-  }
-}
+        this.toastMessage = "";
+      }, 3000);
+    },
+  },
+};
 </script>

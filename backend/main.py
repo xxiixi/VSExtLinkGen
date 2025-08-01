@@ -14,6 +14,7 @@ class ExtractedData(BaseModel):
     version: Optional[str] = None
     publisher: Optional[str] = None
     unique_identifier: Optional[str] = None
+    plugin_name: Optional[str] = None
 
 @app.post("/extract-data", response_model=ExtractedData)
 async def extract_data(request: URLRequest):
@@ -47,13 +48,15 @@ async def extract_data(request: URLRequest):
         if "Resources" in json_data and "Version" in json_data["Resources"]:
             extracted_data.version = json_data["Resources"]["Version"]
         
-        # 提取Publisher（从MoreInfo字段中）
-        if "MoreInfo" in json_data and "PublisherValue" in json_data["MoreInfo"]:
-            extracted_data.publisher = json_data["MoreInfo"]["PublisherValue"]
-        
-        # 提取Unique Identifier（从MoreInfo字段中）
+        # 提取Unique Identifier
         if "MoreInfo" in json_data and "UniqueIdentifierValue" in json_data["MoreInfo"]:
             extracted_data.unique_identifier = json_data["MoreInfo"]["UniqueIdentifierValue"]
+            # 从Unique Identifier中提取publisher和plugin_name
+            if extracted_data.unique_identifier and "." in extracted_data.unique_identifier:
+                # 使用split从左边分割
+                parts = extracted_data.unique_identifier.split(".", 1)
+                extracted_data.publisher = parts[0]
+                extracted_data.plugin_name = parts[1] if len(parts) > 1 else None
         
         return extracted_data
     
