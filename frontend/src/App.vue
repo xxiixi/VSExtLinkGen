@@ -148,7 +148,7 @@
       </div>
     </div>
 
-    <footer class="bg-gradient-to-r from-gray-100 to-gray-200 py-4 mt-10">
+    <footer class="bg-gradient-to-r from-amber-50 to-orange-50 py-4 mt-10">
       <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
         <p>VS Extension Link Generator © 2025</p>
       </div>
