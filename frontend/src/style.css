@@ -1,14 +1,28 @@
+/* 基础样式优化 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+/* 卡片悬停效果 */
 .card-hover {
   transition: all 0.3s ease;
 }
 
 .card-hover:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.08);
 }
 
+/* 渐入动画 */
 .fade-in {
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 0.5s ease-out;
 }
 
 @keyframes fadeIn {
@@ -22,11 +36,13 @@
   }
 }
 
+/* 提示框动画 */
 .toast {
   animation: slideUp 0.3s ease-out forwards,
     slideDown 0.3s ease-in forwards 2.7s;
   transform: translateY(100px);
   opacity: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 @keyframes slideUp {
@@ -43,8 +59,46 @@
   }
 }
 
-/* 结果区域留白样式 */
+/* 结果区域样式 */
 .result-container {
-  margin-top: 2rem; /* 添加顶部留白 */
-  padding: 1rem;   /* 内部留白 */
+  margin-top: 1.5rem;
+  padding: 0.5rem;
+}
+
+/* 平台标题样式 */
+.platform-title {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* 按钮样式优化 */
+button {
+  cursor: pointer;
+}
+
+/* 输入框样式优化 */
+input[type="text"] {
+  font-family: inherit;
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.75rem !important;
+  }
+
+  h2 {
+    font-size: 1.25rem !important;
+  }
+
+  .result-container {
+    margin-top: 1rem;
+  }
 }
